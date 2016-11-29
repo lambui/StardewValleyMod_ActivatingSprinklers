@@ -3,7 +3,7 @@ StardewValley Mod helps activate sprinklers anytime by right clicking them.
 
 **Modder:** PhthaloBlue
 
-###Latest Version: [1.0](https://github.com/lambui/StardewValleyMod_OmniFarm/releases)
+###Latest Version: [1.0](https://github.com/lambui/StardewValleyMod_ActivatingSprinklers/releases)
 ####Change Log **v.1.0**:
 + **Add** rightclicking on sprinklers triggers watering adjacent tiles.
 
