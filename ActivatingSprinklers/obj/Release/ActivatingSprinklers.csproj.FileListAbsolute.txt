@@ -1,0 +1,5 @@
+C:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\PhthaloBlueMods\ActivatingSprinklers\ActivatingSprinklers\bin\Release\manifest.json
+C:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\PhthaloBlueMods\ActivatingSprinklers\ActivatingSprinklers\bin\Release\ActivatingSprinklers.dll
+C:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\PhthaloBlueMods\ActivatingSprinklers\ActivatingSprinklers\bin\Release\ActivatingSprinklers.pdb
+C:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\PhthaloBlueMods\ActivatingSprinklers\ActivatingSprinklers\obj\Release\ActivatingSprinklers.dll
+C:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\PhthaloBlueMods\ActivatingSprinklers\ActivatingSprinklers\obj\Release\ActivatingSprinklers.pdb
