@@ -20,12 +20,12 @@ namespace ActivatingSprinklers
     {
         public override void Entry(IModHelper helper)
         {
-            StardewModdingAPI.Events.GameEvents.UpdateTick += UpdateTickEvent;
+            helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
         }
 
-        static void UpdateTickEvent(object sender, EventArgs e)
+        static void OnUpdateTicked(object sender, EventArgs e)
         {
-            if (StardewValley.Game1.currentLocation == null)
+            if (Game1.currentLocation == null)
                 return;
 
             MouseState currentMouseState = Mouse.GetState();
@@ -38,37 +38,24 @@ namespace ActivatingSprinklers
                 return;
 
             Vector2 tile = Game1.currentCursorTile;
-            StardewValley.Object check;
             if (currentMouseState.RightButton == ButtonState.Pressed)
-                if (Game1.currentLocation.objects.TryGetValue(tile, out check))
+            {
+                if (Game1.currentLocation.objects.TryGetValue(tile, out StardewValley.Object check))
                 {
                     if (check.name.ToLower().Contains("sprinkler"))
                     {
-                        List<Vector2> tileNeedWater = new List<Vector2>();
-                        bool setup = false;
-                        if (check.name.ToLower().Contains("quality") && setup == false)
+                        int sprinklerRadius = 0;
+                        if (true) //TODO: Find out how to check for pressure nozzle
                         {
-                            tileNeedWater = MakeVector2TileGrid(tile, 1);
-                            setup = true;
+                            sprinklerRadius++;
                         }
-
-                        if (check.name.ToLower().Contains("iridium") && setup == false)
+                        if (check.name.ToLower().Contains("iridium")) sprinklerRadius += 2;
+                        else if (check.name.ToLower().Contains("quality")) sprinklerRadius++;
+                        List<Vector2> tileNeedWater = MakeVector2TileGrid(tile, sprinklerRadius);
+                        WateringCan waterCan = new WateringCan
                         {
-                            tileNeedWater = MakeVector2TileGrid(tile, 2);
-                            setup = true;
-                        }
-
-                        if (setup == false)
-                        {
-                            tileNeedWater.Add(new Vector2(tile.X + 1, tile.Y));
-                            tileNeedWater.Add(new Vector2(tile.X - 1, tile.Y));
-                            tileNeedWater.Add(new Vector2(tile.X, tile.Y + 1));
-                            tileNeedWater.Add(new Vector2(tile.X, tile.Y - 1));
-                            setup = true;
-                        }
-
-                        WateringCan waterCan = new WateringCan();
-                        waterCan.WaterLeft = 100;
+                            WaterLeft = 100
+                        };
                         float stamina = Game1.player.Stamina;
                         foreach (Vector2 waterTile in tileNeedWater)
                         {
@@ -78,11 +65,22 @@ namespace ActivatingSprinklers
                         }
                     }
                 }
+            }
         }
 
         static List<Vector2> MakeVector2TileGrid(Vector2 origin, int size)
         {
             List<Vector2> grid = new List<Vector2>();
+
+            if (size == 0)
+            {
+                grid.Add(new Vector2(origin.X + 1, origin.Y));
+                grid.Add(new Vector2(origin.X - 1, origin.Y));
+                grid.Add(new Vector2(origin.X, origin.Y + 1));
+                grid.Add(new Vector2(origin.X, origin.Y - 1));
+                return grid;
+            }
+
             for (int i = 0; i < 2 * size + 1; i++)
             {
                 for (int j = 0; j < 2 * size + 1; j++)
@@ -92,8 +90,14 @@ namespace ActivatingSprinklers
 
                     newVec.X += (float)i;
                     newVec.Y += (float)j;
-
-                    grid.Add(newVec);
+                    if (newVec == origin)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        grid.Add(newVec);
+                    }
                 }
             }
 

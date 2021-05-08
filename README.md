@@ -1,7 +1,8 @@
 # StardewValleyMod_ActivatingSprinklers
 StardewValley Mod helps activate sprinklers anytime by right clicking them.
 
-**Modder:** PhthaloBlue
+**Original Modder:** PhthaloBlue
+**Update Edits:** JudeRV
 
 ###Latest Version: [1.0](https://github.com/lambui/StardewValleyMod_ActivatingSprinklers/releases)
 ####Change Log **v.1.0**:
