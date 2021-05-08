@@ -1,18 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using StardewValley;
 using StardewModdingAPI;
-using System.IO;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Graphics;
 using StardewValley.Tools;
-using StardewValley.Locations;
-using StardewValley.Objects;
-using StardewValley.TerrainFeatures;
 
 namespace ActivatingSprinklers
 {
@@ -22,36 +13,29 @@ namespace ActivatingSprinklers
         {
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
         }
-
-        static void OnUpdateTicked(object sender, EventArgs e)
+        private void OnUpdateTicked(object sender, EventArgs e)
         {
-            if (Game1.currentLocation == null)
-                return;
-
-            MouseState currentMouseState = Mouse.GetState();
-            KeyboardState currentKeyboardState = Keyboard.GetState();
-            DoAction(currentKeyboardState, currentMouseState);
+            if (Game1.currentLocation == null) return;
+            DoAction();
         }
-        static void DoAction(KeyboardState currentKeyboardState, MouseState currentMouseState)
+        private void DoAction()
         {
-            if (Game1.currentLocation == null)
-                return;
-
-            Vector2 tile = Game1.currentCursorTile;
-            if (currentMouseState.RightButton == ButtonState.Pressed)
+            if (Helper.Input.GetState(SButton.MouseRight) == SButtonState.Pressed)
             {
+                Vector2 tile = Game1.currentCursorTile;
                 if (Game1.currentLocation.objects.TryGetValue(tile, out StardewValley.Object check))
                 {
                     if (check.name.ToLower().Contains("sprinkler"))
                     {
+                        //Defines radius & checks for pressure nozzle
                         int sprinklerRadius = 0;
-                        if (true) //TODO: Find out how to check for pressure nozzle
-                        {
-                            sprinklerRadius++;
-                        }
+                        if (check.heldObject.Value != null && Utility.IsNormalObjectAtParentSheetIndex(check.heldObject, 915)) sprinklerRadius++;
+                        //Determines sprinkler type, adjusts radius accordingly
                         if (check.name.ToLower().Contains("iridium")) sprinklerRadius += 2;
                         else if (check.name.ToLower().Contains("quality")) sprinklerRadius++;
+                        //Creates area that needs to be watered
                         List<Vector2> tileNeedWater = MakeVector2TileGrid(tile, sprinklerRadius);
+                        //Waters the area specified
                         WateringCan waterCan = new WateringCan
                         {
                             WaterLeft = 100
@@ -67,11 +51,11 @@ namespace ActivatingSprinklers
                 }
             }
         }
-
+        //Gets a list of all tiles needed to be watered
         static List<Vector2> MakeVector2TileGrid(Vector2 origin, int size)
         {
             List<Vector2> grid = new List<Vector2>();
-
+            //If it's a normal sprinkler, just water the four adjacent tiles around it
             if (size == 0)
             {
                 grid.Add(new Vector2(origin.X + 1, origin.Y));
@@ -80,27 +64,19 @@ namespace ActivatingSprinklers
                 grid.Add(new Vector2(origin.X, origin.Y - 1));
                 return grid;
             }
-
+            //Otherwise, create a square of tiles centered around selected tile to water
             for (int i = 0; i < 2 * size + 1; i++)
             {
                 for (int j = 0; j < 2 * size + 1; j++)
                 {
-                    Vector2 newVec = new Vector2(origin.X - size,
-                                                origin.Y - size);
-
+                    Vector2 newVec = new Vector2(origin.X - size, origin.Y - size);
                     newVec.X += (float)i;
                     newVec.Y += (float)j;
-                    if (newVec == origin)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        grid.Add(newVec);
-                    }
+                    //Don't water the tile that the sprinkler's on
+                    if (newVec.X == origin.X && newVec.Y == origin.Y) continue;
+                    else grid.Add(newVec);
                 }
             }
-
             return grid;
         }
     }
