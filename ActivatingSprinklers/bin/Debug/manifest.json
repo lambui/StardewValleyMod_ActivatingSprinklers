@@ -1,9 +1,9 @@
 ﻿{
 	"Name": "ActivatingSprinklers",
-	"Author": "PhthaloBlue",
-	"Version": "1.0.1",
+	"Author": "StultusV",
+	"Version": "1.0.0",
 	"Description": "Activate sprinklers by right clicking them.",
-	"UniqueID": "BlueMod.ActivatingSprinklers",
+	"UniqueID": "StultusV.ActivatingSprinklers",
 	"EntryDll": "ActivatingSprinklers.dll",
 	"UpdateKeys": []
 }
